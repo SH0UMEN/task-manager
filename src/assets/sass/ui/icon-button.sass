@@ -1,0 +1,38 @@
+@import "../vars"
+
+.icon-button
+    background-color: transparent
+    display: flex
+    height: 26px
+    width: 26px
+    min-width: 26px
+    align-items: center
+    justify-content: center
+    outline: none
+    box-sizing: border-box
+    cursor: pointer
+    border: none
+    font-size: 12px
+    border-radius: 2px
+
+    &:hover
+        border: 2px solid $level3color
+
+    &__icon
+        position: relative
+        transform-origin: center center
+        color: $accentColor
+
+        &--error
+            color: $errorColor
+
+        &--success
+            color: $successColor
+
+        &--handle
+            color: $handleColor
+
+    &:active
+        .icon-button
+            &__icon
+                transform: scale(.85)

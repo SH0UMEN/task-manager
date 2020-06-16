@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <main class="main">
+      <router-view></router-view>
+    </main>
   </div>
 </template>
 
@@ -12,3 +14,7 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+  @import "assets/sass/main"
+</style>

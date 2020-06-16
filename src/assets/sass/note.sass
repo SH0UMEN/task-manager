@@ -1,0 +1,86 @@
+@import "vars"
+
+.note
+    background-color: $level2color
+    padding: 15px
+    border-radius: 5px
+    text-align: left
+
+    input
+        height: 26px
+        font-size: 14px
+        box-sizing: border-box
+
+    &__title-label
+        font-size: 18px
+
+    &__title-input
+        display: inline-block
+        width: 100%
+        box-sizing: border-box
+        margin-top: 10px
+
+    &__tasks
+        margin-top: 10px
+
+        &-add
+            display: flex
+            justify-content: center
+
+        &-label
+            margin-bottom: 10px
+            display: block
+
+        &-placeholder
+            &-add
+                background-color: transparent
+                outline: none
+                border: none
+                color: $accentColor
+                font-size: 14px
+                cursor: pointer
+                padding: 0
+
+                &:hover
+                    text-decoration: underline
+
+    &__task
+        align-items: flex-start
+        display: flex
+        margin-bottom: 10px
+
+        &-title
+            width: 100%
+            margin-left: 15px
+            margin-right: 15px
+            height: 26px
+            display: flex
+            align-items: center
+
+    &__manage-panel
+        display: flex
+        justify-content: space-between
+        margin-bottom: 10px
+
+        &-right
+            display: flex
+
+    &__submit
+        background-color: $successColor
+        color: white
+        width: 100%
+        display: inline-block
+        font-size: 14px
+        border: none
+        border-radius: 2px
+        cursor: pointer
+        padding: 6px 0
+        margin-top: 15px
+
+    &--static
+        .note
+            &__manage-panel
+                margin-bottom: 0
+
+            &__title-label
+                color: $accentColor
