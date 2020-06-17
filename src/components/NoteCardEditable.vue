@@ -129,7 +129,6 @@
                     this.actionHistory.pop();
                 }
 
-                this.canceledActionHistory = [];
                 this.actionHistory.unshift(JSON.stringify(state));
             },
             // Сохранение
