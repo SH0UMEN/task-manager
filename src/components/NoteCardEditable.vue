@@ -25,30 +25,30 @@
         <div class="note__title">
             <span class="note__title-label">Название</span>
             <input required type="text" placeholder="Введите название заметки*"
-                   class="note__title-input" v-model.lazy="note.title">
+                   class="note__title-input" v-model.lazy="note.title" @change="rememberState">
         </div>
 
         <div class="note__tasks">
             <span class="note__tasks-label">Задачи</span>
 
             <div v-if="note.tasks.length == 0" class="note__tasks-placeholder">
-                У заметки нет задач. <button class="note__tasks-placeholder-add" @click="addTask">Нажмите, чтобы создать</button>
+                У заметки нет задач. <button class="note__tasks-placeholder-add" @click="addTask();rememberState()">Нажмите, чтобы создать</button>
             </div>
 
             <!-- Таски -->
             <div v-else class="note__tasks-container">
                 <div class="note__task" v-for="task, i in note.tasks">
-                    <custom-checkbox v-model="task.done"></custom-checkbox>
+                    <custom-checkbox v-model="task.done" @input="rememberState"></custom-checkbox>
                     <input required class="note__task-title" type="text"
-                           v-model.lazy="task.title" placeholder="Текст задачи*">
+                           v-model.lazy="task.title" @change="rememberState" placeholder="Текст задачи*">
                     <icon-button title="Удалить" color="error"
                                  icon-class="fas fa-times"
-                                 @click="removeTask(i)"></icon-button>
+                                 @click="removeTask(i);rememberState()"></icon-button>
                 </div>
                 <div class="note__tasks-add">
                     <icon-button title="Добавить таск" color="success"
                                  icon-class="fas fa-plus"
-                                 @click="addTask()"></icon-button>
+                                 @click="addTask();rememberState()"></icon-button>
                 </div>
             </div>
         </div>
@@ -84,7 +84,9 @@
                 // История предыдущих действий
                 actionHistory: [],
                 // История отменённых действий
-                canceledActionHistory: []
+                canceledActionHistory: [],
+                // Было ли последнее действие отменой
+                lastActionWasUndo: false
             }
         },
         mounted() {
@@ -93,14 +95,6 @@
                 this.note = Object.assign({}, this.$store.getters.getNote(this.noteId));
             } else {
                 this.rememberState(this.note);
-            }
-        },
-        watch: {
-            note: {
-                deep: true,
-                handler(val) {
-                    this.rememberState(val);
-                }
             }
         },
         methods: {
@@ -123,13 +117,18 @@
                 }
             },
             // Запись действия
-            rememberState(state) {
+            rememberState() {
                 // Ставим ограничение количества запоминаемых действий
                 if(this.actionHistory.length == 100) {
                     this.actionHistory.pop();
                 }
 
-                this.actionHistory.unshift(JSON.stringify(state));
+                if(this.lastActionWasUndo) {
+                    this.lastActionWasUndo = false;
+                    this.canceledActionHistory = [];
+                }
+
+                this.actionHistory.unshift(JSON.stringify(this.note));
             },
             // Сохранение
             submit() {
@@ -159,14 +158,16 @@
                 if(this.actionHistory.length > 1) {
                     let prevState = this.actionHistory.shift();
                     this.canceledActionHistory.unshift(prevState);
-                    prevState = this.actionHistory.shift();
+                    prevState = this.actionHistory[0];
                     this.note = Object.assign({}, JSON.parse(prevState));
+                    this.lastActionWasUndo = true;
                 }
             },
             // Повтор действия
             redo() {
                 if(this.canceledActionHistory.length > 0) {
                     let canceledState = this.canceledActionHistory.shift();
+                    this.actionHistory.unshift(canceledState);
                     this.note = Object.assign({}, JSON.parse(canceledState));
                 }
             }
