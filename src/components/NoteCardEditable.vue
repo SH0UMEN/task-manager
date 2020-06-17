@@ -108,6 +108,7 @@
             deleteNote() {
                 if(confirm("Вы уверены, что хотите удалить заметку?")) {
                     this.$store.commit("deleteNote", this.noteId)
+                    this.$router.push({ name: 'index' });
                 }
             },
             // Отмена редактирования/создания
